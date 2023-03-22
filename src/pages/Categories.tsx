@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react';
 import CategoryType from '../types/CategoryType';
 import generateId from '../utils/generateId';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Dialog } from '@mui/material/Dialog';
+import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -25,6 +25,7 @@ const Categories: React.FC = () => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [valid, setValid] = useState<boolean>(false);
+  const [agree, setAgree] = useState<boolean>(false);
 
   useEffect(() => {
     if (title.length >= 3) {
@@ -34,10 +35,6 @@ const Categories: React.FC = () => {
     }
   }, [title]);
 
-  useEffect(() => {
-    console.log(categories);
-  }, [categories]);
-
   const addCategory = () => {
     setCategories([...categories, { description: description, id: generateId(), title: title }]);
     setTitle('');
@@ -45,14 +42,29 @@ const Categories: React.FC = () => {
   };
 
   const removeCategory = (id: number) => {
+    handleClickOpen();
+
     const index = categories.findIndex(item => item.id === id);
 
     if (index !== -1) {
-      setCategories(prevState => {
-        prevState.splice(index, 1);
-        return [...prevState];
-      });
+      const newCategories = [...categories];
+      newCategories.splice(index, 1);
+      setCategories(newCategories);
     }
+  };
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const clicou = () => {
+    setAgree(true);
   };
 
   return (
@@ -94,31 +106,23 @@ const Categories: React.FC = () => {
         })}
       </Grid>
 
-      <div>
-        <Button variant="outlined" onClick={handleClickOpen}>
-          Open alert dialog
-        </Button>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{'Use google'}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Let Google help apps determine location. This means sending anonymous location data to Google, even when
-              no apps are running.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Disagree</Button>
-            <Button onClick={handleClose} autoFocus>
-              Agree
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Apagar'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">Deseja apagar o item?</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Voltar</Button>
+          <Button onClick={clicou} autoFocus>
+            Apagar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Grid>
   );
 };
